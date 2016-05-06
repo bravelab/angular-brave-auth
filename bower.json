@@ -1,12 +1,12 @@
 {
-  "name": "angular-brave-docs",
+  "name": "angular-brave-auth",
   "authors": [
     "Mariusz Smenżyk <mariusz.smenzyk@sizeof.pl>"
   ],
-  "description": "Docs module for SmartAdmin",
-  "main": "./dist/angular-brave-docs.js",
+  "description": "Auth module for SmartAdmin",
+  "main": "./dist/angular-brave-auth.js",
   "keywords": [
-    "Docs",
+    "Auth",
     "SmartAdmin"
   ],
   "license": "MIT",

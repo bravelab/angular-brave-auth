@@ -4,8 +4,7 @@
   var uglify = require('gulp-uglify');
   var concat = require('gulp-concat');
   var eslint = require('gulp-eslint');
-  var changelog = require('gulp-changelog')
-  var conventionalChangelog = require('gulp-conventional-changelog')
+  var conventionalChangelog = require('gulp-conventional-changelog');
 
   var config = {
     lint: {
@@ -15,8 +14,8 @@
       files: [
         'src/**/*.js'
       ],
-      concat: 'angular-brave-docs.js',
-      min: 'angular-brave-docs.min.js'
+      concat: 'angular-brave-auth.js',
+      min: 'angular-brave-auth.min.js'
     }
   };
 

@@ -1,8 +1,8 @@
 {
-  "name": "angular-brave-docs",
-  "description": "Generic docs module for SmartAdmin",
-  "main": "dist/angular-brave-docs.min.js",
-  "version": "0.0.3",
+  "name": "angular-brave-auth",
+  "description": "Generic auth module for SmartAdmin",
+  "main": "dist/angular-brave-auth.min.js",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "author": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/sizeof/angular-brave-docs.git"
+    "url": "https://bitbucket.org/sizeof/angular-brave-auth.git"
   },
   "devDependencies": {
     "angular": "^1.4.3",

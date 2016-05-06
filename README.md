@@ -1,18 +1,18 @@
-ngBraveDocs App for SmartAdmin AngularJS
+ngBraveAuth App for SmartAdmin AngularJS
 ========================================
 
 Development
 -----------
 To run the code in your development environment:
 
-1. Run `git clone --recursive git@bitbucket.org:sizeof/angular-brave-docs.git angular-brave-docs`
+1. Run `git clone --recursive git@bitbucket.org:sizeof/angular-brave-auth.git angular-brave-auth`
 2. Run `npm install`
 3. Run `gulp` for watch changes in code
 
 For develop module on local
 
 1. Run `bower link` on component directory
-2. Go to the app root directory and run `bower link angular-brave-docs` (Notice! You must re-link your bower module in app after changes in component) 
+2. Go to the app root directory and run `bower link angular-brave-auth` (Notice! You must re-link your bower module in app after changes in component) 
 3. Run `gulp test` for karma tests
 
 Production
