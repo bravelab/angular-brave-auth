@@ -13,17 +13,15 @@
 
     describe('value - version', function () {
 
-      it ('test', function() {
+      it('test', function () {
         var x = true;
         expect(x).toEqual(true);
       });
 
-
       // it('should return current version', inject(function (version) {
-      //   expect(version).toEqual('0.0.1');
+      //   expect(version).toEqual('0.0.4');
       // }));
     });
 
   });
 })();
-

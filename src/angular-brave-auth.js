@@ -7,7 +7,7 @@
    * @description Auth module of the application.
    */
   angular.module('ngBraveAuth', ['ui.router', 'ngCookies'])
-    .value('version', '0.0.1')
+    .value('version', '0.0.4')
     .constant('authKeys', {
       googleClientId: '',
       facebookAppId: ''
