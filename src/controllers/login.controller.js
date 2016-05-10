@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('ngBraveAuth')
+    .module('app.auth')
     .controller('LoginController', LoginController);
 
   LoginController.$inject = ['$location', '$scope', 'AuthService'];
@@ -24,7 +24,7 @@
     /**
      * @name activate
      * @desc Actions to be performed when this controller is instantiated
-     * @memberOf ngBraveAuth.LoginController
+     * @memberOf app.auth.LoginController
      */
     function activate() {
       // If the user is authenticated, they should not be here.
@@ -36,7 +36,7 @@
     /**
      * @name login
      * @desc Log the user in
-     * @memberOf ngBraveAuth.LoginController
+     * @memberOf app.auth.LoginController
      */
     function login() {
       authService.login(vm.username, vm.password);

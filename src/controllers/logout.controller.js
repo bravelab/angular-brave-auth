@@ -3,11 +3,11 @@
 
   /**
    * @ngdoc overview
-   * @name app [ngBraveAuth]
+   * @name app [app.auth]
    * @ Logout controller
    */
   angular
-    .module('ngBraveAuth')
+    .module('app.auth')
     .controller('LogoutController', LogoutController);
 
   LogoutController.$inject = ['AuthService'];

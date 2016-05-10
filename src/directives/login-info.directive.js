@@ -3,13 +3,13 @@
 
   /**
    * @ngdoc overview
-   * @name app [ngBraveAuth]
+   * @name app [app.auth]
    * @description loginInfo directive
    */
-  angular.module('ngBraveAuth').directive('loginInfo', function (User) {
+  angular.module('app.auth').directive('loginInfo', function (User) {
     return {
       restrict: 'A',
-      templateUrl: 'ngBraveAuth/directives/login-info.tpl.html',
+      templateUrl: 'app.auth/directives/login-info.tpl.html',
       link: function (scope, element) {
         User.initialized.then(function () {
           scope.user = User;

@@ -4,11 +4,11 @@
 
   /**
    * @ngdoc routes
-   * @name app [ngBraveAuth]
-   * @description Routes configuration ngBraveAuth
+   * @name app [app.auth]
+   * @description Routes configuration app.auth
    */
   angular
-    .module('ngBraveAuth')
+    .module('app.auth')
     .config(routes);
 
   routes.$inject = ['$stateProvider'];
@@ -25,7 +25,7 @@
         url: '/login',
         views: {
           root: {
-            templateUrl: 'ngBraveAuth/views/login.html',
+            templateUrl: 'app.auth/views/login.html',
             controller: 'LoginController',
             controllerAs: 'vm'
           }
@@ -67,7 +67,7 @@
         url: '/register',
         views: {
           root: {
-            templateUrl: 'ngBraveAuth/views/register.html'
+            templateUrl: 'app.auth/views/register.html'
           }
         },
         data: {
@@ -80,7 +80,7 @@
         url: '/forgot-password',
         views: {
           root: {
-            templateUrl: 'ngBraveAuth/views/forgot-password.html'
+            templateUrl: 'app.auth/views/forgot-password.html'
           }
         },
         data: {
@@ -93,7 +93,7 @@
         url: '/lock',
         views: {
           root: {
-            templateUrl: 'ngBraveAuth/views/lock.html'
+            templateUrl: 'app.auth/views/lock.html'
           }
         },
         data: {

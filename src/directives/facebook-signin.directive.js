@@ -3,10 +3,10 @@
 
   /**
    * @ngdoc overview
-   * @name app [ngBraveAuth]
+   * @name app [app.auth]
    * @description facebookSignin directive
    */
-  angular.module('ngBraveAuth').directive('facebookSignin', function ($rootScope, ezfb) {
+  angular.module('app.auth').directive('facebookSignin', function ($rootScope, ezfb) {
     return {
       replace: true,
       restrict: 'E',

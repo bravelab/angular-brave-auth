@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('ngBraveAuth')
+    .module('app.auth')
     .factory('AuthService', AuthService);
 
   AuthService.$inject = ['$cookies', '$localStorage', '$q', '$http', 'APP_CONFIG'];
@@ -15,7 +15,7 @@
    * @param {object} $http Http object
    * @param {object} APP_CONFIG Module config
    * @desc Docs module for SmartAdmin
-   * @returns {{login: ngBraveAuth.services.AuthService.login, logout: ngBraveAuth.services.AuthService.logout, register: ngBraveAuth.services.AuthService.register, unauthenticate: ngBraveAuth.services.AuthService.unauthenticate, isAuthenticated: ngBraveAuth.services.AuthService.isAuthenticated, getAuthenticatedAccount: ngBraveAuth.services.AuthService.getAuthenticatedAccount, setAuthenticatedAccount: ngBraveAuth.services.AuthService.setAuthenticatedAccount, getToken: ngBraveAuth.services.AuthService.getToken}}
+   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout, register: app.auth.services.AuthService.register, unauthenticate: app.auth.services.AuthService.unauthenticate, isAuthenticated: app.auth.services.AuthService.isAuthenticated, getAuthenticatedAccount: app.auth.services.AuthService.getAuthenticatedAccount, setAuthenticatedAccount: app.auth.services.AuthService.setAuthenticatedAccount, getToken: app.auth.services.AuthService.getToken}}
    * @constructor
    */
   function AuthService($cookies, $localStorage, $q, $http, APP_CONFIG) {
@@ -45,7 +45,7 @@
      * @param {string} password The password entered by the user
      * @param {string} username The username entered by the user
      * @returns {Promise}
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function register(email, password, username) {
       return $http.post('/api/accounts/', {
@@ -61,7 +61,7 @@
      * @param {string} username The username
      * @param {string} password The password entered by the user
      * @returns {Promise}
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function login(username, password) {
       return $http({
@@ -96,7 +96,7 @@
      * @name getAuthenticatedAccount
      * @desc Return the currently authenticated account
      * @returns {object|undefined} Account if authenticated, else `undefined`
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function getAuthenticatedAccount() {
       if (!$cookies.get('authenticatedAccount')) {
@@ -110,7 +110,7 @@
      * @name isAuthenticated
      * @desc Check if the current user is authenticated
      * @returns {boolean} True is user is authenticated, else false.
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function isAuthenticated() {
       return !!$cookies.get('authenticatedAccount');
@@ -121,7 +121,7 @@
      * @desc Stringify the account object and store it in a cookie
      * @param {Object} user The account object to be stored
      * @returns {undefined}
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function setAuthenticatedAccount(user) {
       $cookies.put('authenticatedAccount', JSON.stringify(user));
@@ -131,7 +131,7 @@
      * @name unauthenticate
      * @desc Delete the cookie where the user object is stored
      * @returns {undefined}
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function unauthenticate() {
       $cookies.remove('authenticatedAccount');
@@ -141,7 +141,7 @@
      * @name logout
      * @desc Try to log the user out
      * @returns {Promise}
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function logout() {
 
@@ -173,7 +173,7 @@
      * @name getToken
      * @desc Get saved token from local storage or call API for one
      * @returns {Promise}
-     * @memberOf ngBraveAuth.services.AuthService
+     * @memberOf app.auth.services.AuthService
      */
     function getToken() {
       var deferred = $q.defer();

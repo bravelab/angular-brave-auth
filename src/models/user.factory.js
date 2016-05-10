@@ -1,12 +1,12 @@
 /**
  * Doc
- * @namespace ngBraveAuth
+ * @namespace app.auth
  */
 (function () {
   'use strict';
 
   angular
-    .module('ngBraveAuth')
+    .module('app.auth')
     .factory('Doc', Doc);
 
   Doc.$inject = [];

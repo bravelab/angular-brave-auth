@@ -3,10 +3,10 @@
 
   /**
    * @ngdoc overview
-   * @name app [ngBraveAuth]
+   * @name app [app.auth]
    * @description googleSignin directive
    */
-  angular.module('ngBraveAuth').directive('googleSignin', function ($rootScope, GooglePlus) {
+  angular.module('app.auth').directive('googleSignin', function ($rootScope, GooglePlus) {
     return {
       restrict: 'E',
       template: '<a class="g-signin btn btn-block btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>',

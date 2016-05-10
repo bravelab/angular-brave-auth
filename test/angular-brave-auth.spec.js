@@ -3,13 +3,13 @@
 
   /**
    * @ngdoc overview
-   * @name ngBraveAuth
-   * @description ngBraveAuth tests
+   * @name app.auth
+   * @description app.auth tests
    *
    */
-  describe('ngBraveAuth module', function () {
+  describe('app.auth module', function () {
 
-    beforeEach(module('ngBraveAuth'));
+    beforeEach(module('app.auth'));
 
     describe('value - version', function () {
 
