@@ -7,17 +7,14 @@
 
   angular
     .module('app.auth')
-    .factory('Doc', Doc);
+    .factory('User', User);
 
-  Doc.$inject = [];
+  User.$inject = [];
 
-  function Doc() {
+  function User() {
 
     var factory = function (data) {
       this.id = data.id;
-      this.title = data.title;
-      this.slug = data.slug;
-      this.content = data.content;
     };
 
     return factory;
