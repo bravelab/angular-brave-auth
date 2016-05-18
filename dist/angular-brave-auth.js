@@ -6,17 +6,26 @@
    * @name app [app.auth]
    * @description Auth module of the application.
    */
-  angular.module('app.auth', ['ui.router', 'ngCookies'])
-    .value('version', '0.0.4')
-    .constant('authKeys', {
-      googleClientId: '',
-      facebookAppId: ''
-    })
-    .constant('APP_CONFIG', {
-      apiUrl: '/api'
-    });
+  angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
+    .value('version', '0.0.8');
 
 })();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('app.auth')
+    .constant('authConfig', {
+      apiUrl: '/api',
+      templates: {
+        directives: {
+          loginInfo: 'bower_components/angular-brave-auth/src/templates/login-info.tpl.html'
+        }
+      }
+    });
+
+}());
 
 (function () {
   'use strict';
@@ -226,22 +235,24 @@
    * @name app [app.auth]
    * @description facebookSignin directive
    */
-  angular.module('app.auth').directive('facebookSignin', function ($rootScope, ezfb) {
-    return {
-      replace: true,
-      restrict: 'E',
-      template: '<a class="btn btn-block btn-social btn-facebook"><i class="fa fa-facebook"></i> Sign in with Facebook</a>',
-      link: function (scope, element) {
-        element.on('click', function () {
-          ezfb.login(function (res) {
-            if (res.authResponse) {
-              $rootScope.$broadcast('event:facebook-signin-success', res.authResponse);
-            }
-          }, {scope: 'public_profile'});
-        });
-      }
-    };
-  });
+  angular
+    .module('app.auth')
+    .directive('facebookSignin', function ($rootScope, ezfb) {
+      return {
+        replace: true,
+        restrict: 'E',
+        template: '<a class="btn btn-block btn-social btn-facebook"><i class="fa fa-facebook"></i> Sign in with Facebook</a>',
+        link: function (scope, element) {
+          element.on('click', function () {
+            ezfb.login(function (res) {
+              if (res.authResponse) {
+                $rootScope.$broadcast('event:facebook-signin-success', res.authResponse);
+              }
+            }, {scope: 'public_profile'});
+          });
+        }
+      };
+    });
 
 })();
 
@@ -253,72 +264,78 @@
    * @name app [app.auth]
    * @description googleSignin directive
    */
-  angular.module('app.auth').directive('googleSignin', function ($rootScope, GooglePlus) {
-    return {
-      restrict: 'E',
-      template: '<a class="g-signin btn btn-block btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>',
-      replace: true,
-      link: function (scope, element) {
-        element.on('click', function () {
-          GooglePlus.login().then(function (authResult) {
-            $rootScope.$broadcast('event:google-plus-signin-success', authResult);
+  angular
+    .module('app.auth')
+    .directive('googleSignin', function ($rootScope, GooglePlus) {
+      return {
+        restrict: 'E',
+        template: '<a class="g-signin btn btn-block btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>',
+        replace: true,
+        link: function (scope, element) {
+          element.on('click', function () {
+            GooglePlus.login().then(function (authResult) {
+              $rootScope.$broadcast('event:google-plus-signin-success', authResult);
 
-          }, function (err) {
-            $rootScope.$broadcast('event:google-plus-signin-failure', err);
+            }, function (err) {
+              $rootScope.$broadcast('event:google-plus-signin-failure', err);
 
+            });
           });
-        });
-      }
-    };
-  });
+        }
+      };
+    });
 
 })();
 
-(function () {
+(function() {
   'use strict';
 
-  /**
-   * @ngdoc overview
-   * @name app [app.auth]
-   * @description loginInfo directive
-   */
-  angular.module('app.auth').directive('loginInfo', function (User) {
+  angular.module('app.auth')
+    .directive('loginInfo', loginInfo);
+
+  loginInfo.$inject = ['authConfig', 'User'];
+
+  function loginInfo(authConfig, User) {
     return {
       restrict: 'A',
-      templateUrl: 'app.auth/directives/login-info.tpl.html',
+      templateUrl: function() {
+        return authConfig.templates.directives.loginInfo;
+      },
       link: function (scope, element) {
         User.initialized.then(function () {
           scope.user = User;
         });
       }
     };
-  });
+  }
 
-})();
+}());
 
-/**
- * Doc
- * @namespace app.auth
- */
 (function () {
   'use strict';
 
   angular
     .module('app.auth')
-    .factory('Doc', Doc);
+    .factory('User', User);
 
-  Doc.$inject = [];
+  User.$inject = ['$http', '$q', 'authConfig'];
 
-  function Doc() {
+  function User($http, $q, authConfig) {
+    var dfd = $q.defer();
 
-    var factory = function (data) {
-      this.id = data.id;
-      this.title = data.title;
-      this.slug = data.slug;
-      this.content = data.content;
+    var UserModel = {
+      initialized: dfd.promise,
+      username: 'undefined',
+      picture: 'undefined'
     };
 
-    return factory;
+    $http.get(authConfig.apiUrl + '/user.json').then(function (response) {
+      UserModel.username = response.data.username;
+      UserModel.picture = response.data.picture;
+      dfd.resolve(UserModel);
+    });
+
+    return UserModel;
   }
 
 }());

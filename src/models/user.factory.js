@@ -1,7 +1,3 @@
-/**
- * Doc
- * @namespace app.auth
- */
 (function () {
   'use strict';
 
@@ -9,15 +5,24 @@
     .module('app.auth')
     .factory('User', User);
 
-  User.$inject = [];
+  User.$inject = ['$http', '$q', 'authConfig'];
 
-  function User() {
+  function User($http, $q, authConfig) {
+    var dfd = $q.defer();
 
-    var factory = function (data) {
-      this.id = data.id;
+    var UserModel = {
+      initialized: dfd.promise,
+      username: 'undefined',
+      picture: 'undefined'
     };
 
-    return factory;
+    $http.get(authConfig.apiUrl + '/user.json').then(function (response) {
+      UserModel.username = response.data.username;
+      UserModel.picture = response.data.picture;
+      dfd.resolve(UserModel);
+    });
+
+    return UserModel;
   }
 
 }());

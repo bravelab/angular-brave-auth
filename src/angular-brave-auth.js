@@ -7,13 +7,6 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('version', '0.0.7')
-    .constant('authKeys', {
-      googleClientId: '',
-      facebookAppId: ''
-    })
-    .constant('APP_CONFIG', {
-      apiUrl: '/api'
-    });
+    .value('version', '0.0.8');
 
 })();

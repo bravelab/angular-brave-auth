@@ -1,21 +1,23 @@
-(function () {
+(function() {
   'use strict';
 
-  /**
-   * @ngdoc overview
-   * @name app [app.auth]
-   * @description loginInfo directive
-   */
-  angular.module('app.auth').directive('loginInfo', function (User) {
+  angular.module('app.auth')
+    .directive('loginInfo', loginInfo);
+
+  loginInfo.$inject = ['authConfig', 'User'];
+
+  function loginInfo(authConfig, User) {
     return {
       restrict: 'A',
-      templateUrl: 'app.auth/directives/login-info.tpl.html',
+      templateUrl: function() {
+        return authConfig.templates.directives.loginInfo;
+      },
       link: function (scope, element) {
         User.initialized.then(function () {
           scope.user = User;
         });
       }
     };
-  });
+  }
 
-})();
+}());
