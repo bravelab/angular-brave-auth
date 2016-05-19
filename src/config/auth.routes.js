@@ -11,22 +11,23 @@
     .module('app.auth')
     .config(routes);
 
-  routes.$inject = ['$stateProvider'];
+  routes.$inject = ['$stateProvider', 'authConfig'];
 
   /**
    *
    * @param {object} $stateProvider StateProvider
+   * @param {object} authConfig App config
    */
-  function routes($stateProvider) {
+  function routes($stateProvider, authConfig) {
 
     $stateProvider
-
       .state('login', {
         url: '/login',
         views: {
           root: {
-            templateUrl: 'app.auth/views/login.html',
-            controller: 'LoginController',
+            templateUrl: function() {
+              return authConfig.templates.views.login;
+            },
             controllerAs: 'vm'
           }
         },
@@ -67,7 +68,9 @@
         url: '/register',
         views: {
           root: {
-            templateUrl: 'app.auth/views/register.html'
+            templateUrl: function() {
+              return authConfig.templates.views.register;
+            }
           }
         },
         data: {
@@ -80,7 +83,9 @@
         url: '/forgot-password',
         views: {
           root: {
-            templateUrl: 'app.auth/views/forgot-password.html'
+            templateUrl: function() {
+              return authConfig.templates.views.forgotPassword;
+            }
           }
         },
         data: {
@@ -93,7 +98,9 @@
         url: '/lock',
         views: {
           root: {
-            templateUrl: 'app.auth/views/lock.html'
+            templateUrl: function () {
+              return authConfig.templates.views.lock;
+            }
           }
         },
         data: {

@@ -14,7 +14,7 @@
    * @param {object} $q Query object
    * @param {object} $http Http object
    * @param {object} APP_CONFIG Module config
-   * @desc Docs module for SmartAdmin
+   * @desc Auth module
    * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout, register: app.auth.services.AuthService.register, unauthenticate: app.auth.services.AuthService.unauthenticate, isAuthenticated: app.auth.services.AuthService.isAuthenticated, getAuthenticatedAccount: app.auth.services.AuthService.getAuthenticatedAccount, setAuthenticatedAccount: app.auth.services.AuthService.setAuthenticatedAccount, getToken: app.auth.services.AuthService.getToken}}
    * @constructor
    */

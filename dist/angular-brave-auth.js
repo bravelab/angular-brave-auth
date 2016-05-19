@@ -7,7 +7,145 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('version', '0.0.8');
+    .value('version', '0.0.9');
+
+})();
+
+(function() {
+  'use strict';
+
+  angular
+    .module('app.auth')
+    .constant('authConfig', {
+      apiUrl: '/api',
+      templates: {
+        views: {
+          login: 'bower_components/angular-brave-auth/src/templates/login.tpl.html',
+          register: 'bower_components/angular-brave-auth/src/templates/register.tpl.html',
+          forgotPassword: 'bower_components/angular-brave-auth/src/templates/forgot-password.tpl.html',
+          lock: 'bower_components/angular-brave-auth/src/templates/lock.tpl.html'
+        },
+        directives: {
+          loginInfo: 'bower_components/angular-brave-auth/src/templates/login-info.tpl.html'
+        }
+      }
+    });
+
+}());
+
+
+(function () {
+  'use strict';
+
+
+  /**
+   * @ngdoc routes
+   * @name app [app.auth]
+   * @description Routes configuration app.auth
+   */
+  angular
+    .module('app.auth')
+    .config(routes);
+
+  routes.$inject = ['$stateProvider', 'authConfig'];
+
+  /**
+   *
+   * @param {object} $stateProvider StateProvider
+   * @param {object} authConfig App config
+   */
+  function routes($stateProvider, authConfig) {
+
+    $stateProvider
+      .state('login', {
+        url: '/login',
+        views: {
+          root: {
+            templateUrl: function() {
+              return authConfig.templates.views.login;
+            },
+            controllerAs: 'vm'
+          }
+        },
+        data: {
+          title: 'Login',
+          htmlId: 'extr-page'
+        },
+        resolve: {
+          srcipts: function (lazyScript) {
+            return lazyScript.register([
+              'build/vendor.ui.js'
+            ]);
+          }
+        }
+      })
+
+      .state('logout', {
+        url: '/logout',
+        views: {
+          root: {
+            controller: 'LogoutController'
+          }
+        },
+        data: {
+          title: 'Logout',
+          htmlId: 'extr-page'
+        },
+        resolve: {
+          srcipts: function (lazyScript) {
+            return lazyScript.register([
+              'build/vendor.ui.js'
+            ]);
+          }
+        }
+      })
+
+      .state('register', {
+        url: '/register',
+        views: {
+          root: {
+            templateUrl: function() {
+              return authConfig.templates.views.register;
+            }
+          }
+        },
+        data: {
+          title: 'Register',
+          htmlId: 'extr-page'
+        }
+      })
+
+      .state('forgotPassword', {
+        url: '/forgot-password',
+        views: {
+          root: {
+            templateUrl: function() {
+              return authConfig.templates.views.forgotPassword;
+            }
+          }
+        },
+        data: {
+          title: 'Forgot Password',
+          htmlId: 'extr-page'
+        }
+      })
+
+      .state('lock', {
+        url: '/lock',
+        views: {
+          root: {
+            templateUrl: function () {
+              return authConfig.templates.views.lock;
+            }
+          }
+        },
+        data: {
+          title: 'Locked Screen',
+          htmlId: 'lock-page'
+        }
+      });
+
+  }
 
 })();
 
@@ -102,130 +240,6 @@
 
 })();
 
-
-(function() {
-  'use strict';
-
-  angular
-    .module('app.auth')
-    .constant('authConfig', {
-      apiUrl: '/api',
-      templates: {
-        directives: {
-          loginInfo: 'bower_components/angular-brave-auth/src/templates/login-info.tpl.html'
-        }
-      }
-    });
-
-}());
-
-(function () {
-  'use strict';
-
-
-  /**
-   * @ngdoc routes
-   * @name app [app.auth]
-   * @description Routes configuration app.auth
-   */
-  angular
-    .module('app.auth')
-    .config(routes);
-
-  routes.$inject = ['$stateProvider'];
-
-  /**
-   *
-   * @param {object} $stateProvider StateProvider
-   */
-  function routes($stateProvider) {
-
-    $stateProvider
-
-      .state('login', {
-        url: '/login',
-        views: {
-          root: {
-            templateUrl: 'app.auth/views/login.html',
-            controller: 'LoginController',
-            controllerAs: 'vm'
-          }
-        },
-        data: {
-          title: 'Login',
-          htmlId: 'extr-page'
-        },
-        resolve: {
-          srcipts: function (lazyScript) {
-            return lazyScript.register([
-              'build/vendor.ui.js'
-            ]);
-          }
-        }
-      })
-
-      .state('logout', {
-        url: '/logout',
-        views: {
-          root: {
-            controller: 'LogoutController'
-          }
-        },
-        data: {
-          title: 'Logout',
-          htmlId: 'extr-page'
-        },
-        resolve: {
-          srcipts: function (lazyScript) {
-            return lazyScript.register([
-              'build/vendor.ui.js'
-            ]);
-          }
-        }
-      })
-
-      .state('register', {
-        url: '/register',
-        views: {
-          root: {
-            templateUrl: 'app.auth/views/register.html'
-          }
-        },
-        data: {
-          title: 'Register',
-          htmlId: 'extr-page'
-        }
-      })
-
-      .state('forgotPassword', {
-        url: '/forgot-password',
-        views: {
-          root: {
-            templateUrl: 'app.auth/views/forgot-password.html'
-          }
-        },
-        data: {
-          title: 'Forgot Password',
-          htmlId: 'extr-page'
-        }
-      })
-
-      .state('lock', {
-        url: '/lock',
-        views: {
-          root: {
-            templateUrl: 'app.auth/views/lock.html'
-          }
-        },
-        data: {
-          title: 'Locked Screen',
-          htmlId: 'lock-page'
-        }
-      });
-
-  }
-
-})();
 
 (function () {
   'use strict';
@@ -370,7 +384,7 @@
    * @param {object} $q Query object
    * @param {object} $http Http object
    * @param {object} APP_CONFIG Module config
-   * @desc Docs module for SmartAdmin
+   * @desc Auth module
    * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout, register: app.auth.services.AuthService.register, unauthenticate: app.auth.services.AuthService.unauthenticate, isAuthenticated: app.auth.services.AuthService.isAuthenticated, getAuthenticatedAccount: app.auth.services.AuthService.getAuthenticatedAccount, setAuthenticatedAccount: app.auth.services.AuthService.setAuthenticatedAccount, getToken: app.auth.services.AuthService.getToken}}
    * @constructor
    */
