@@ -5,21 +5,21 @@
     .module('app.auth')
     .factory('AuthService', AuthService);
 
-  AuthService.$inject = ['$cookies', '$localStorage', '$q', '$http', 'APP_CONFIG'];
+  AuthService.$inject = ['$cookies', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig', 'AuthToolsService', 'UserModel'];
 
   /**
    *
-   * @param {object} $cookies Cookies
-   * @param {object} $localStorage LocalStorage
-   * @param {object} $q Query object
-   * @param {object} $http Http object
-   * @param {object} APP_CONFIG Module config
-   * @desc Auth module
-   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout, register: app.auth.services.AuthService.register, unauthenticate: app.auth.services.AuthService.unauthenticate, isAuthenticated: app.auth.services.AuthService.isAuthenticated, getAuthenticatedAccount: app.auth.services.AuthService.getAuthenticatedAccount, setAuthenticatedAccount: app.auth.services.AuthService.setAuthenticatedAccount, getToken: app.auth.services.AuthService.getToken}}
-   * @constructor
-   */
-  function AuthService($cookies, $localStorage, $q, $http, APP_CONFIG) {
-
+   * @param $cookies
+   * @param $state
+   * @param $localStorage
+   * @param $q
+   * @param $http
+   * @param braveAuthConfig
+   * @param authToolsService
+   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}}
+     * @constructor
+     */
+  function AuthService($cookies, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
 
     /**
      * @name AuthService
@@ -27,33 +27,10 @@
      */
     var factory = {
       login: login,
-      logout: logout,
-      register: register,
-      unauthenticate: unauthenticate,
-      isAuthenticated: isAuthenticated,
-      getAuthenticatedAccount: getAuthenticatedAccount,
-      setAuthenticatedAccount: setAuthenticatedAccount,
-      getToken: getToken
+      logout: logout
     };
 
     return factory;
-
-    /**
-     * @name register
-     * @desc Try to register a new user
-     * @param {string} email The email entered by the user
-     * @param {string} password The password entered by the user
-     * @param {string} username The username entered by the user
-     * @returns {Promise}
-     * @memberOf app.auth.services.AuthService
-     */
-    function register(email, password, username) {
-      return $http.post('/api/accounts/', {
-        email: email,
-        username: username,
-        password: password
-      });
-    }
 
     /**
      * @name login
@@ -64,9 +41,10 @@
      * @memberOf app.auth.services.AuthService
      */
     function login(username, password) {
+
       return $http({
         method: 'POST',
-        url: APP_CONFIG.apiUrl + '/auth/login/',
+        url: braveAuthConfig.getApiUrl() + braveAuthConfig.getResourceName(),
         data: {username: username, password: password},
         headers: {'Content-Type': 'application/json'}
       })
@@ -79,8 +57,23 @@
        * @desc Set the authenticated account and redirect to index
        */
       function loginSuccessFn(data) {
-        AuthService.setAuthenticatedAccount(data);
-        window.location = '/';
+
+        if (typeof data.Item !== 'undefined' && data.Item) {
+
+          authToolsService.authenticate(new UserModel(data.Item));
+
+          var returnToState = $rootScope.returnToState;
+          var returnToStateParams = $rootScope.returnToStateParams;
+
+          if (returnToState) {
+            $state.go(returnToState, returnToStateParams);
+          } else {
+            $state.go('app.home');
+          }
+
+        } else {
+          loginErrorFn();
+        }
       }
 
       /**
@@ -88,53 +81,8 @@
        * @desc Log "Epic failure!" to the console
        */
       function loginErrorFn() {
-        console.error('Epic failure!');
+        $state.go($state.current, {message: 'Invalid login or password'});
       }
-    }
-
-    /**
-     * @name getAuthenticatedAccount
-     * @desc Return the currently authenticated account
-     * @returns {object|undefined} Account if authenticated, else `undefined`
-     * @memberOf app.auth.services.AuthService
-     */
-    function getAuthenticatedAccount() {
-      if (!$cookies.get('authenticatedAccount')) {
-        return;
-      }
-
-      return JSON.parse($cookies.get('authenticatedAccount'));
-    }
-
-    /**
-     * @name isAuthenticated
-     * @desc Check if the current user is authenticated
-     * @returns {boolean} True is user is authenticated, else false.
-     * @memberOf app.auth.services.AuthService
-     */
-    function isAuthenticated() {
-      return !!$cookies.get('authenticatedAccount');
-    }
-
-    /**
-     * @name setAuthenticatedAccount
-     * @desc Stringify the account object and store it in a cookie
-     * @param {Object} user The account object to be stored
-     * @returns {undefined}
-     * @memberOf app.auth.services.AuthService
-     */
-    function setAuthenticatedAccount(user) {
-      $cookies.put('authenticatedAccount', JSON.stringify(user));
-    }
-
-    /**
-     * @name unauthenticate
-     * @desc Delete the cookie where the user object is stored
-     * @returns {undefined}
-     * @memberOf app.auth.services.AuthService
-     */
-    function unauthenticate() {
-      $cookies.remove('authenticatedAccount');
     }
 
     /**
@@ -147,7 +95,7 @@
 
       return $http({
         method: 'POST',
-        url: APP_CONFIG.apiUrl + '/auth/logout/'
+        url: braveAuthConfig.apiUrl + '/auth/logout/'
       })
         .then(logoutSuccessFn, logoutErrorFn);
 
@@ -157,7 +105,7 @@
        */
       function logoutSuccessFn() {
         AuthService.unauthenticate();
-        window.location = '/#/login?logged-out';
+        $state.go('app.home');
       }
 
       /**
@@ -168,31 +116,6 @@
         console.error('Epic failure!');
       }
     }
-
-    /**
-     * @name getToken
-     * @desc Get saved token from local storage or call API for one
-     * @returns {Promise}
-     * @memberOf app.auth.services.AuthService
-     */
-    function getToken() {
-      var deferred = $q.defer();
-      if ($localStorage.token) {
-        deferred.resolve($localStorage.token);
-      } else {
-        $http({
-          method: 'POST',
-          url: APP_CONFIG.apiUrl + '/token?api_key=' + APP_CONFIG.apiKey
-        })
-          .then(function (data) {
-            $localStorage.token = data.data.token;
-            deferred.resolve($localStorage.token);
-          }, function (data) {
-            delete $localStorage.token;
-            deferred.reject(data);
-          });
-      }
-      return deferred.promise;
-    }
   }
+
 })();

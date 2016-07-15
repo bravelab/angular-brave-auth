@@ -7,6 +7,6 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('version', '0.0.9');
+    .value('version', '0.0.10');
 
 })();
