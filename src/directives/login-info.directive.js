@@ -4,18 +4,16 @@
   angular.module('app.auth')
     .directive('loginInfo', loginInfo);
 
-  loginInfo.$inject = ['authConfig', 'User'];
+  loginInfo.$inject = ['BraveAuthConfig', 'UserModel'];
 
-  function loginInfo(authConfig, User) {
+  function loginInfo(authConfig, UserModel) {
     return {
       restrict: 'A',
       templateUrl: function() {
-        return authConfig.templates.directives.loginInfo;
+        return authConfig.getTemplates().directives.loginInfo;
       },
       link: function (scope, element) {
-        User.initialized.then(function () {
-          scope.user = User;
-        });
+        scope.user = UserModel;
       }
     };
   }

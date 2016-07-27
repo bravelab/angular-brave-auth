@@ -5,7 +5,7 @@
     .module('app.auth')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$location', '$scope', 'AuthService'];
+  LoginController.$inject = ['$location', '$stateParams', '$scope', 'AuthService'];
 
   /**
    *
@@ -14,10 +14,12 @@
    * @param {object} authService AuthService object
    * @constructor
      */
-  function LoginController($location, $scope, authService) {
+  function LoginController($location, $stateParams, $scope, authService) {
+
     var vm = this;
 
     vm.login = login;
+    vm.message = $stateParams.message; // TODO nkler: check if it works with $state.go($state.current ...)
 
     activate();
 
@@ -27,10 +29,6 @@
      * @memberOf app.auth.LoginController
      */
     function activate() {
-      // If the user is authenticated, they should not be here.
-      // if (authService.isAuthenticated()) {
-      //    $location.url('/');
-      // }
     }
 
     /**
@@ -39,26 +37,9 @@
      * @memberOf app.auth.LoginController
      */
     function login() {
+      console.log('app.auth.LoginController');
       authService.login(vm.username, vm.password);
     }
-
-    /**
-     $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-      if (authResult.status.method == 'PROMPT') {
-        GooglePlus.getUser().then(function (user) {
-          User.username = user.name;
-          User.picture = user.picture;
-          $state.go('app.dashboard');
-        });
-      }
-    });
-
-    $scope.$on('event:facebook-signin-success', function (event, authResult) {
-      ezfb.api('/me', function (res) {
-        User.username = res.name;
-        User.picture = 'https://graph.facebook.com/' + res.id + '/picture';
-        $state.go('app.dashboard');
-      });
-    });*/
   }
+
 })();
