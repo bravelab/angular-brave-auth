@@ -15,8 +15,8 @@
 
   /**
    *
-   * @param $stateProvider
-   * @param braveAuthConfig
+   * @param {Object} $stateProvider - state provider
+   * @param {Object} braveAuthConfig - Auth config
      */
   function routes($stateProvider, braveAuthConfig) {
 

@@ -1,3 +1,5 @@
+(function () {
+  'use strict';
 
   var gulp = require('gulp');
   var Server = require('karma').Server;
@@ -18,7 +20,6 @@
       min: 'angular-brave-auth.min.js'
     }
   };
-
 
   function runTest(watch, done) {
 
@@ -76,7 +77,10 @@
   });
 
   gulp.task('watch', function () {
-    gulp.watch(config.lint.src, ['dist']);
+    gulp.watch(config.lint.src, ['lint', 'test', 'dist']);
   });
 
+
   gulp.task('default', ['watch']);
+
+})();

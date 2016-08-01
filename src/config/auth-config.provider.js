@@ -15,6 +15,12 @@
 
     this.apiUrl = '/api';
     this.resourceName = '/auth/login/';
+    this.usernameField = 'email';
+    this.logo = {
+      'src': '../../../styles/img/logo.png',
+      'alt': 'Angular Brave Auth',
+      'title': 'Angular Brave Auth'
+    };
 
     this.templates = {
       views: {
@@ -30,6 +36,8 @@
       var apiUrl = this.apiUrl;
       var templates = this.templates;
       var resourceName = this.resourceName;
+      var usernameField = this.usernameField;
+      var logo = this.logo;
 
       return {
         getApiUrl: function () {
@@ -40,6 +48,15 @@
         },
         getTemplates: function () {
           return templates;
+        },
+        getUsernameField: function () {
+          return usernameField;
+        },
+        getUsernameFieldTemplate: function () {
+          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameField + '.html';
+        },
+        getLogo: function () {
+          return logo;
         }
       };
     };
@@ -52,6 +69,12 @@
     };
     this.setTemplates = function (templates) {
       this.templates = templates;
+    };
+    this.setUsernameField = function (usernameField) {
+      this.usernameField = usernameField;
+    };
+    this.setLogo = function (logo) {
+      this.logo = logo;
     };
   }
 

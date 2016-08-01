@@ -9,13 +9,13 @@
 
   /**
    *
-   * @param $cookies
-   * @param $state
-   * @param $localStorage
-   * @param $q
-   * @param $http
-   * @param braveAuthConfig
-   * @param authToolsService
+   * @param {Object} $cookies
+   * @param {Object} $state
+   * @param {Object} $localStorage
+   * @param {Object} $q
+   * @param {Object} $http
+   * @param {Object} braveAuthConfig
+   * @param {Object} authToolsService
    * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}}
      * @constructor
      */
@@ -57,7 +57,7 @@
        * @desc Set the authenticated account and redirect to index
        */
       function loginSuccessFn(data) {
-
+        console.log(data);
         if (typeof data.Item !== 'undefined' && data.Item) {
 
           authToolsService.authenticate(new UserModel(data.Item));
