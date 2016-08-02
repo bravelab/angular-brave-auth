@@ -1,8 +1,8 @@
 {
   "name": "angular-brave-auth",
-  "description": "Generic auth module for SmartAdmin",
+  "description": "Brave Auth module for angular apps",
   "main": "dist/angular-brave-auth.min.js",
-  "version": "0.0.10",
+  "version": "0.0.13",
   "private": true,
   "license": "MIT",
   "author": {
