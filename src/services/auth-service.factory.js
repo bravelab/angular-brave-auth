@@ -9,16 +9,18 @@
 
   /**
    *
-   * @param {Object} $cookies
-   * @param {Object} $state
-   * @param {Object} $localStorage
-   * @param {Object} $q
-   * @param {Object} $http
-   * @param {Object} braveAuthConfig
-   * @param {Object} authToolsService
-   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}}
-     * @constructor
-     */
+   * @param {Object} $cookies - Cookies
+   * @param {Object} $state - State
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $localStorage - Local Storage
+   * @param {Object} $q - Query an object
+   * @param {Object} $http - HTPP Object
+   * @param {Object} braveAuthConfig - Config provider
+   * @param {Object} authToolsService - Auth Service
+   * @param {Object} UserModel - User model
+   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
+   * @constructor
+   */
   function AuthService($cookies, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
 
     /**
@@ -57,7 +59,7 @@
        * @desc Set the authenticated account and redirect to index
        */
       function loginSuccessFn(data) {
-        console.log(data);
+
         if (typeof data.Item !== 'undefined' && data.Item) {
 
           authToolsService.authenticate(new UserModel(data.Item));

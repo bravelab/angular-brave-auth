@@ -7,24 +7,7 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('version', '0.0.11')
-    .config(function ($httpProvider) {
-
-      $httpProvider.interceptors.push(['$sessionStorage', function ($sessionStorage) {
-        return {
-          'request': function (config) {
-            // TODO: Configurable headers
-            var loggedUser = angular.fromJson($sessionStorage.loggedUser);
-            config.headers = config.headers || {};
-            if (angular.isDefined(loggedUser.token) && loggedUser.token) {
-              config.headers.Authorization = 'JWT ' + loggedUser.token;
-            }
-            return config;
-          }
-        };
-      }]);
-
-    });
+    .value('braveAuthVersion', '0.0.11');
 
 })();
 
@@ -283,6 +266,31 @@
 (function () {
   'use strict';
 
+  /**
+   * @ngdoc overview
+   * @name app [app.auth]
+   * @description braveAuthJWTHttpInterceptor directive
+   */
+  angular
+    .module('app.auth')
+    .factory('braveAuthJWTHttpInterceptor', function ($sessionStorage) {
+      return {
+        'request': function (config) {
+          var loggedUser = angular.fromJson($sessionStorage.loggedUser);
+          config.headers = config.headers || {};
+          if (angular.isDefined(loggedUser.token) && loggedUser.token) {
+            config.headers.Authorization = 'JWT ' + loggedUser.token;
+          }
+          return config;
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
   angular
     .module('app.auth')
     .factory('UserModel', UserModel);
@@ -329,9 +337,9 @@
 
   /**
    *
-   * @param {Object} $rootScope
-   * @param {Object} $state
-   * @param {Object} authService
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $state - State
+   * @param {Object} authService - Auth Service
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
      * @constructor
      */
@@ -395,16 +403,18 @@
 
   /**
    *
-   * @param {Object} $cookies
-   * @param {Object} $state
-   * @param {Object} $localStorage
-   * @param {Object} $q
-   * @param {Object} $http
-   * @param {Object} braveAuthConfig
-   * @param {Object} authToolsService
-   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}}
-     * @constructor
-     */
+   * @param {Object} $cookies - Cookies
+   * @param {Object} $state - State
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $localStorage - Local Storage
+   * @param {Object} $q - Query an object
+   * @param {Object} $http - HTPP Object
+   * @param {Object} braveAuthConfig - Config provider
+   * @param {Object} authToolsService - Auth Service
+   * @param {Object} UserModel - User model
+   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
+   * @constructor
+   */
   function AuthService($cookies, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
 
     /**
@@ -443,7 +453,7 @@
        * @desc Set the authenticated account and redirect to index
        */
       function loginSuccessFn(data) {
-        console.log(data);
+
         if (typeof data.Item !== 'undefined' && data.Item) {
 
           authToolsService.authenticate(new UserModel(data.Item));

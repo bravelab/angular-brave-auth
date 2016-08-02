@@ -9,9 +9,9 @@
 
   /**
    *
-   * @param {Object} $rootScope
-   * @param {Object} $state
-   * @param {Object} authService
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $state - State
+   * @param {Object} authService - Auth Service
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
      * @constructor
      */
