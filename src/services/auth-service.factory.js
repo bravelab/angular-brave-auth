@@ -9,16 +9,18 @@
 
   /**
    *
-   * @param $cookies
-   * @param $state
-   * @param $localStorage
-   * @param $q
-   * @param $http
-   * @param braveAuthConfig
-   * @param authToolsService
-   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}}
-     * @constructor
-     */
+   * @param {Object} $cookies - Cookies
+   * @param {Object} $state - State
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $localStorage - Local Storage
+   * @param {Object} $q - Query an object
+   * @param {Object} $http - HTPP Object
+   * @param {Object} braveAuthConfig - Config provider
+   * @param {Object} authToolsService - Auth Service
+   * @param {Object} UserModel - User model
+   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
+   * @constructor
+   */
   function AuthService($cookies, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
 
     /**

@@ -28,7 +28,10 @@
       if (typeof data.picture !== 'undefined') {
         this.picture = data.picture;
       }
+
     };
   }
 
 }());
+
+

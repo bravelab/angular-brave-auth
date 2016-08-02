@@ -9,13 +9,13 @@
 
   /**
    *
-   * @param $q
-   * @param $http
-   * @param $timeout
-   * @param $sessionStorage
+   * @param {Object} $q - q object
+   * @param {Object} $http - HTTP object
+   * @param {Object} $timeout - Timeout object
+   * @param {Object} $sessionStorage - Session Storage
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
-     * @constructor
-     */
+    * @constructor
+    */
   function AuthToolsService($q, $http, $timeout, $sessionStorage) {
 
     var _identity = null,
@@ -51,7 +51,6 @@
       authenticate: function(identity) {
         _identity = identity;
         _authenticated = identity != null;
-
         if (identity) {
           $sessionStorage.loggedUser = angular.toJson(identity);
         } else {
@@ -61,6 +60,7 @@
       identity: function(force) {
         var deferred = $q.defer();
 
+        // ?
         if (force === true) {
           _identity = null;
         }

@@ -5,21 +5,24 @@
     .module('app.auth')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$location', '$stateParams', '$scope', 'AuthService'];
-
+  LoginController.$inject = ['$location', '$stateParams', '$scope', 'AuthService', 'BraveAuthConfig'];
   /**
    *
    * @param {object} $location location
+   * @param {object} $stateParams location
    * @param {object} $scope scope
    * @param {object} authService AuthService object
+   * @param {object} braveAuthConfig BraveAuthConfigProvider object
    * @constructor
      */
-  function LoginController($location, $stateParams, $scope, authService) {
+  function LoginController($location, $stateParams, $scope, authService, braveAuthConfig) {
 
     var vm = this;
 
     vm.login = login;
     vm.message = $stateParams.message; // TODO nkler: check if it works with $state.go($state.current ...)
+    vm.usernameFieldTemplate = braveAuthConfig.getUsernameFieldTemplate();
+    vm.logo = braveAuthConfig.getLogo();
 
     activate();
 
@@ -37,7 +40,6 @@
      * @memberOf app.auth.LoginController
      */
     function login() {
-      console.log('app.auth.LoginController');
       authService.login(vm.username, vm.password);
     }
   }

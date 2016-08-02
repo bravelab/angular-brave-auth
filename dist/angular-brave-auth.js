@@ -7,9 +7,11 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('version', '0.0.10');
+    .value('braveAuthVersion', '0.0.11');
 
 })();
+
+
 
 (function () {
   'use strict';
@@ -28,6 +30,12 @@
 
     this.apiUrl = '/api';
     this.resourceName = '/auth/login/';
+    this.usernameField = 'email';
+    this.logo = {
+      'src': '../../../styles/img/logo.png',
+      'alt': 'Angular Brave Auth',
+      'title': 'Angular Brave Auth'
+    };
 
     this.templates = {
       views: {
@@ -43,6 +51,8 @@
       var apiUrl = this.apiUrl;
       var templates = this.templates;
       var resourceName = this.resourceName;
+      var usernameField = this.usernameField;
+      var logo = this.logo;
 
       return {
         getApiUrl: function () {
@@ -53,6 +63,15 @@
         },
         getTemplates: function () {
           return templates;
+        },
+        getUsernameField: function () {
+          return usernameField;
+        },
+        getUsernameFieldTemplate: function () {
+          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameField + '.html';
+        },
+        getLogo: function () {
+          return logo;
         }
       };
     };
@@ -65,6 +84,12 @@
     };
     this.setTemplates = function (templates) {
       this.templates = templates;
+    };
+    this.setUsernameField = function (usernameField) {
+      this.usernameField = usernameField;
+    };
+    this.setLogo = function (logo) {
+      this.logo = logo;
     };
   }
 
@@ -87,8 +112,8 @@
 
   /**
    *
-   * @param $stateProvider
-   * @param braveAuthConfig
+   * @param {Object} $stateProvider - state provider
+   * @param {Object} braveAuthConfig - Auth config
      */
   function routes($stateProvider, braveAuthConfig) {
 
@@ -147,21 +172,24 @@
     .module('app.auth')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$location', '$stateParams', '$scope', 'AuthService'];
-
+  LoginController.$inject = ['$location', '$stateParams', '$scope', 'AuthService', 'BraveAuthConfig'];
   /**
    *
    * @param {object} $location location
+   * @param {object} $stateParams location
    * @param {object} $scope scope
    * @param {object} authService AuthService object
+   * @param {object} braveAuthConfig BraveAuthConfigProvider object
    * @constructor
      */
-  function LoginController($location, $stateParams, $scope, authService) {
+  function LoginController($location, $stateParams, $scope, authService, braveAuthConfig) {
 
     var vm = this;
 
     vm.login = login;
     vm.message = $stateParams.message; // TODO nkler: check if it works with $state.go($state.current ...)
+    vm.usernameFieldTemplate = braveAuthConfig.getUsernameFieldTemplate();
+    vm.logo = braveAuthConfig.getLogo();
 
     activate();
 
@@ -238,6 +266,31 @@
 (function () {
   'use strict';
 
+  /**
+   * @ngdoc overview
+   * @name app [app.auth]
+   * @description braveAuthJWTHttpInterceptor directive
+   */
+  angular
+    .module('app.auth')
+    .factory('braveAuthJWTHttpInterceptor', function ($sessionStorage) {
+      return {
+        'request': function (config) {
+          var loggedUser = angular.fromJson($sessionStorage.loggedUser);
+          config.headers = config.headers || {};
+          if (angular.isDefined(loggedUser.token) && loggedUser.token) {
+            config.headers.Authorization = 'JWT ' + loggedUser.token;
+          }
+          return config;
+        }
+      };
+    });
+
+})();
+
+(function () {
+  'use strict';
+
   angular
     .module('app.auth')
     .factory('UserModel', UserModel);
@@ -265,10 +318,13 @@
       if (typeof data.picture !== 'undefined') {
         this.picture = data.picture;
       }
+
     };
   }
 
 }());
+
+
 
 (function () {
   'use strict';
@@ -281,16 +337,16 @@
 
   /**
    *
-   * @param $rootScope
-   * @param $state
-   * @param authService
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $state - State
+   * @param {Object} authService - Auth Service
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
      * @constructor
      */
   function AuthAuthorizeService($rootScope, $state, authService) {
 
-    var signin_state_name = 'login';
-    var accessdenied_state_name = 'error403';
+    var signinStateName = 'login';
+    var accessdeniedStateName = 'error403';
 
     return {
       authorize: function() {
@@ -299,19 +355,20 @@
           .then(function() {
             var isAuthenticated = authService.isAuthenticated();
 
-            if ($rootScope.toState.data.roles && $rootScope.toState.data.roles.length > 0 && !authService.isInAnyRole($rootScope.toState.data.roles)) {
+            if ($rootScope.toState.data.roles &&
+              $rootScope.toState.data.roles.length > 0 &&
+              !authService.isInAnyRole($rootScope.toState.data.roles)) {
 
               // user is signed in but not authorized for desired state
               if (isAuthenticated) {
-                $state.go(accessdenied_state_name);
+                $state.go(accessdeniedStateName);
               } else {
                 // user is not authenticated. stow the state they wanted before you
                 // send them to the signin state, so you can return them when you're done
                 $rootScope.returnToState = $rootScope.toState;
                 $rootScope.returnToStateParams = $rootScope.toStateParams;
 
-
-                $state.go(signin_state_name);
+                $state.go(signinStateName);
               }
             }
           });
@@ -346,16 +403,18 @@
 
   /**
    *
-   * @param $cookies
-   * @param $state
-   * @param $localStorage
-   * @param $q
-   * @param $http
-   * @param braveAuthConfig
-   * @param authToolsService
-   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}}
-     * @constructor
-     */
+   * @param {Object} $cookies - Cookies
+   * @param {Object} $state - State
+   * @param {Object} $rootScope - Root Scope
+   * @param {Object} $localStorage - Local Storage
+   * @param {Object} $q - Query an object
+   * @param {Object} $http - HTPP Object
+   * @param {Object} braveAuthConfig - Config provider
+   * @param {Object} authToolsService - Auth Service
+   * @param {Object} UserModel - User model
+   * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
+   * @constructor
+   */
   function AuthService($cookies, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
 
     /**
@@ -468,13 +527,13 @@
 
   /**
    *
-   * @param $q
-   * @param $http
-   * @param $timeout
-   * @param $sessionStorage
+   * @param {Object} $q - q object
+   * @param {Object} $http - HTTP object
+   * @param {Object} $timeout - Timeout object
+   * @param {Object} $sessionStorage - Session Storage
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
-     * @constructor
-     */
+    * @constructor
+    */
   function AuthToolsService($q, $http, $timeout, $sessionStorage) {
 
     var _identity = null,
@@ -510,7 +569,6 @@
       authenticate: function(identity) {
         _identity = identity;
         _authenticated = identity != null;
-
         if (identity) {
           $sessionStorage.loggedUser = angular.toJson(identity);
         } else {
@@ -520,6 +578,7 @@
       identity: function(force) {
         var deferred = $q.defer();
 
+        // ?
         if (force === true) {
           _identity = null;
         }
