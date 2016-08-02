@@ -40,7 +40,6 @@
      * @memberOf app.auth.LoginController
      */
     function login() {
-      console.log('app.auth.LoginController');
       authService.login(vm.username, vm.password);
     }
   }
