@@ -12,7 +12,6 @@
 })();
 
 
-
 (function () {
   'use strict';
 
@@ -114,7 +113,7 @@
    *
    * @param {Object} $stateProvider - state provider
    * @param {Object} braveAuthConfig - Auth config
-     */
+   */
   function routes($stateProvider, braveAuthConfig) {
 
     $stateProvider
@@ -122,7 +121,7 @@
         url: '/login',
         views: {
           root: {
-            templateUrl: function() {
+            templateUrl: function () {
               return braveAuthConfig.templates.views.login;
             },
             controller: 'LoginController',
@@ -181,7 +180,7 @@
    * @param {object} authService AuthService object
    * @param {object} braveAuthConfig BraveAuthConfigProvider object
    * @constructor
-     */
+   */
   function LoginController($location, $stateParams, $scope, authService, braveAuthConfig) {
 
     var vm = this;
@@ -240,7 +239,7 @@
 })();
 
 
-(function() {
+(function () {
   'use strict';
 
   angular.module('app.auth')
@@ -251,7 +250,7 @@
   function loginInfo(authConfig, UserModel) {
     return {
       restrict: 'A',
-      templateUrl: function() {
+      templateUrl: function () {
         return authConfig.getTemplates().directives.loginInfo;
       },
       link: function (scope, element) {
@@ -276,9 +275,11 @@
       return {
         'request': function (config) {
           var loggedUser = angular.fromJson($sessionStorage.loggedUser);
-          config.headers = config.headers || {};
-          if (angular.isDefined(loggedUser.token) && loggedUser.token) {
-            config.headers.Authorization = 'JWT ' + loggedUser.token;
+          if (loggedUser) {
+            config.headers = config.headers || {};
+            if (angular.isDefined(loggedUser.token) && loggedUser.token) {
+              config.headers.Authorization = 'JWT ' + loggedUser.token;
+            }
           }
           return config;
         }
@@ -324,7 +325,6 @@
 }());
 
 
-
 (function () {
   'use strict';
 
@@ -340,23 +340,22 @@
    * @param {Object} $state - State
    * @param {Object} authService - Auth Service
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
-     * @constructor
-     */
+   * @constructor
+   */
   function AuthAuthorizeService($rootScope, $state, authService) {
 
     var signinStateName = 'login';
     var accessdeniedStateName = 'error403';
 
     return {
-      authorize: function() {
+      authorize: function () {
 
         return authService.identity()
-          .then(function() {
+          .then(function () {
             var isAuthenticated = authService.isAuthenticated();
 
             if ($rootScope.toState.data.roles &&
-              $rootScope.toState.data.roles.length > 0 &&
-              !authService.isInAnyRole($rootScope.toState.data.roles)) {
+              $rootScope.toState.data.roles.length > 0 && !authService.isInAnyRole($rootScope.toState.data.roles)) {
 
               // user is signed in but not authorized for desired state
               if (isAuthenticated) {
@@ -531,28 +530,28 @@
    * @param {Object} $timeout - Timeout object
    * @param {Object} $sessionStorage - Session Storage
    * @returns {{isIdentityResolved: isIdentityResolved, isAuthenticated: isAuthenticated, isInRole: isInRole, isInAnyRole: isInAnyRole, authenticate: authenticate, identity: identity}}
-    * @constructor
-    */
+   * @constructor
+   */
   function AuthToolsService($q, $http, $timeout, $sessionStorage) {
 
     var _identity = null,
       _authenticated = false;
 
     return {
-      isIdentityResolved: function() {
+      isIdentityResolved: function () {
         return angular.isDefined(_identity);
       },
-      isAuthenticated: function() {
+      isAuthenticated: function () {
         return _authenticated;
       },
-      isInRole: function(role) {
+      isInRole: function (role) {
         if (!_authenticated || !_identity.roles) {
           return false;
         }
 
         return _identity.roles.indexOf(role) !== -1;
       },
-      isInAnyRole: function(roles) {
+      isInAnyRole: function (roles) {
         if (!_authenticated || !_identity.roles) {
           return false;
         }
@@ -565,7 +564,7 @@
 
         return false;
       },
-      authenticate: function(identity) {
+      authenticate: function (identity) {
         _identity = identity;
         _authenticated = identity != null;
         if (identity) {
@@ -574,7 +573,7 @@
           $sessionStorage.loggedUser = null;
         }
       },
-      identity: function(force) {
+      identity: function (force) {
         var deferred = $q.defer();
 
         // ?

@@ -19,7 +19,7 @@
       });
 
       // it('should return current version', inject(function (braveAuthVersion) {
-      //  expect(braveAuthVersion).toEqual('0.0.14');
+      //  expect(braveAuthVersion).toEqual('0.0.16');
       // }));
 
     });

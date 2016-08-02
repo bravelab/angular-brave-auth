@@ -12,9 +12,11 @@
       return {
         'request': function (config) {
           var loggedUser = angular.fromJson($sessionStorage.loggedUser);
-          config.headers = config.headers || {};
-          if (angular.isDefined(loggedUser.token) && loggedUser.token) {
-            config.headers.Authorization = 'JWT ' + loggedUser.token;
+          if (loggedUser) {
+            config.headers = config.headers || {};
+            if (angular.isDefined(loggedUser.token) && loggedUser.token) {
+              config.headers.Authorization = 'JWT ' + loggedUser.token;
+            }
           }
           return config;
         }
