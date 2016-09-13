@@ -5,11 +5,11 @@
     .module('app.auth')
     .factory('AuthService', AuthService);
 
-  AuthService.$inject = ['$cookies', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig', 'AuthToolsService', 'UserModel'];
+  AuthService.$inject = ['$sessionStorage', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig', 'AuthToolsService', 'UserModel'];
 
   /**
    *
-   * @param {Object} $cookies - Cookies
+   * @param {Object} $sessionStorage - Session storage
    * @param {Object} $state - State
    * @param {Object} $rootScope - Root Scope
    * @param {Object} $localStorage - Local Storage
@@ -21,7 +21,7 @@
    * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
    * @constructor
    */
-  function AuthService($cookies, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
+  function AuthService($sessionStorage, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
 
     /**
      * @name AuthService
@@ -97,7 +97,7 @@
 
       return $http({
         method: 'POST',
-        url: braveAuthConfig.apiUrl + '/auth/logout/'
+        url: braveAuthConfig.getApiUrl() + '/auth/logout/'
       })
         .then(logoutSuccessFn, logoutErrorFn);
 
@@ -105,8 +105,16 @@
        * @name logoutSuccessFn
        * @desc Unauthenticate and redirect to index with page reload
        */
-      function logoutSuccessFn() {
-        AuthService.unauthenticate();
+      function logoutSuccessFn(response) {
+
+        // clear session storage
+        $sessionStorage.$reset();
+        $localStorage.$reset();
+
+        if (angular.isDefined(response.logoutRedirectUrl)) {
+          window.location.href = response.logoutRedirectUrl;
+        }
+
         $state.go('app.home');
       }
 
