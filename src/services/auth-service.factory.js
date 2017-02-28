@@ -45,7 +45,7 @@
     function login(username, password) {
 
       var validationData = {};
-      validationData[braveAuthConfig.getUsernameField()] = username;
+      validationData[braveAuthConfig.getUsernameFieldName()] = username;
       validationData.password = password;
 
       return $http({

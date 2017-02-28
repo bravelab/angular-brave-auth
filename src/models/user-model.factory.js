@@ -12,7 +12,7 @@
     return function (data) {
 
       if (typeof data.username !== 'undefined') {
-        this.username = data[braveAuthConfig.getUsernameField()];
+        this.username = data[braveAuthConfig.getUsernameFieldName()];
       }
 
       if (typeof data.roles !== 'undefined') {
