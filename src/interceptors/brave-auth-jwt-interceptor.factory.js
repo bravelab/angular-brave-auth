@@ -13,7 +13,7 @@
         'request': function (config) {
           var loggedUser = angular.fromJson($sessionStorage.loggedUser);
           config.headers = config.headers || {};
-          if (angular.isDefined(loggedUser.token) && loggedUser.token) {
+          if (angular.isObject(loggedUser)) {
             config.headers.Authorization = 'JWT ' + loggedUser.token;
           }
           return config;
