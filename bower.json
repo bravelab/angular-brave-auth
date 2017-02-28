@@ -10,7 +10,7 @@
     "SmartAdmin"
   ],
   "license": "MIT",
-  "homepage": "https://www.bravelab.io/en/",
+  "homepage": "https://www.bravelab.io/",
   "private": true,
   "ignore": [
     "**/.*",
