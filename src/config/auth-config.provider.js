@@ -15,7 +15,8 @@
 
     this.apiUrl = '/api';
     this.resourceName = '/auth/login/';
-    this.usernameField = 'email';
+    this.usernameFieldType = 'email'; // form template
+    this.usernameFieldName = 'username'; // api field name
     this.logo = {
       'src': '../../../styles/img/logo.png',
       'alt': 'Angular Brave Auth',
@@ -36,7 +37,8 @@
       var apiUrl = this.apiUrl;
       var templates = this.templates;
       var resourceName = this.resourceName;
-      var usernameField = this.usernameField;
+      var usernameFieldType = this.usernameFieldType;
+      var usernameFieldName = this.usernameFieldName;
       var logo = this.logo;
 
       return {
@@ -49,11 +51,14 @@
         getTemplates: function () {
           return templates;
         },
-        getUsernameField: function () {
-          return usernameField;
+        getUsernameFieldType: function () {
+          return usernameFieldType;
+        },
+        getUsernameFieldName: function () {
+          return usernameFieldName;
         },
         getUsernameFieldTemplate: function () {
-          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameField + '.html';
+          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameFieldType + '.html';
         },
         getLogo: function () {
           return logo;
@@ -70,8 +75,16 @@
     this.setTemplates = function (templates) {
       this.templates = templates;
     };
+    this.setUsernameFieldType = function (usernameFieldType) {
+      this.usernameFieldType = usernameFieldType;
+    };
     this.setUsernameField = function (usernameField) {
-      this.usernameField = usernameField;
+      console.log('setUsernameField is deprecated, please use setUsernameFieldType to set type ' +
+        'and setUusernameFieldName to set api field name');
+      this.setUsernameFieldType(usernameField);
+    };
+    this.setUsernameFieldName = function (usernameFieldName) {
+      this.usernameFieldName = usernameFieldName;
     };
     this.setLogo = function (logo) {
       this.logo = logo;

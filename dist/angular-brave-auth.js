@@ -7,7 +7,7 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('braveAuthVersion', '0.0.13');
+    .value('braveAuthVersion', '0.0.19');
 
 })();
 
@@ -30,7 +30,8 @@
 
     this.apiUrl = '/api';
     this.resourceName = '/auth/login/';
-    this.usernameField = 'email';
+    this.usernameFieldType = 'email'; // form template
+    this.usernameFieldName = 'username'; // api field name
     this.logo = {
       'src': '../../../styles/img/logo.png',
       'alt': 'Angular Brave Auth',
@@ -51,7 +52,8 @@
       var apiUrl = this.apiUrl;
       var templates = this.templates;
       var resourceName = this.resourceName;
-      var usernameField = this.usernameField;
+      var usernameFieldType = this.usernameFieldType;
+      var usernameFieldName = this.usernameFieldName;
       var logo = this.logo;
 
       return {
@@ -64,11 +66,14 @@
         getTemplates: function () {
           return templates;
         },
-        getUsernameField: function () {
-          return usernameField;
+        getUsernameFieldType: function () {
+          return usernameFieldType;
+        },
+        getUsernameFieldName: function () {
+          return usernameFieldName;
         },
         getUsernameFieldTemplate: function () {
-          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameField + '.html';
+          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameFieldType + '.html';
         },
         getLogo: function () {
           return logo;
@@ -85,8 +90,16 @@
     this.setTemplates = function (templates) {
       this.templates = templates;
     };
+    this.setUsernameFieldType = function (usernameFieldType) {
+      this.usernameFieldType = usernameFieldType;
+    };
     this.setUsernameField = function (usernameField) {
-      this.usernameField = usernameField;
+      console.log('angular-brave-auth: setUsernameField is deprecated, please use setUsernameFieldType to set type ' +
+        'and setUusernameFieldName to set api field name');
+      this.setUsernameFieldType(usernameField);
+    };
+    this.setUsernameFieldName = function (usernameFieldName) {
+      this.usernameFieldName = usernameFieldName;
     };
     this.setLogo = function (logo) {
       this.logo = logo;
@@ -240,28 +253,6 @@
 })();
 
 
-(function() {
-  'use strict';
-
-  angular.module('app.auth')
-    .directive('loginInfo', loginInfo);
-
-  loginInfo.$inject = ['BraveAuthConfig', 'UserModel'];
-
-  function loginInfo(authConfig, UserModel) {
-    return {
-      restrict: 'A',
-      templateUrl: function() {
-        return authConfig.getTemplates().directives.loginInfo;
-      },
-      link: function (scope, element) {
-        scope.user = UserModel;
-      }
-    };
-  }
-
-}());
-
 (function () {
   'use strict';
 
@@ -294,12 +285,14 @@
     .module('app.auth')
     .factory('UserModel', UserModel);
 
-  function UserModel() {
+  UserModel.$inject = ['BraveAuthConfig'];
+
+  function UserModel(braveAuthConfig) {
 
     return function (data) {
 
       if (typeof data.username !== 'undefined') {
-        this.username = data.username;
+        this.username = data[braveAuthConfig.getUsernameFieldName()];
       }
 
       if (typeof data.roles !== 'undefined') {
@@ -437,10 +430,14 @@
      */
     function login(username, password) {
 
+      var validationData = {};
+      validationData[braveAuthConfig.getUsernameFieldName()] = username;
+      validationData.password = password;
+
       return $http({
         method: 'POST',
         url: braveAuthConfig.getApiUrl() + braveAuthConfig.getResourceName(),
-        data: {username: username, password: password},
+        data: validationData,
         headers: {'Content-Type': 'application/json'}
       })
         .success(loginSuccessFn)
@@ -600,3 +597,25 @@
   }
 
 })();
+
+(function() {
+  'use strict';
+
+  angular.module('app.auth')
+    .directive('loginInfo', loginInfo);
+
+  loginInfo.$inject = ['BraveAuthConfig', 'UserModel'];
+
+  function loginInfo(authConfig, UserModel) {
+    return {
+      restrict: 'A',
+      templateUrl: function() {
+        return authConfig.getTemplates().directives.loginInfo;
+      },
+      link: function (scope, element) {
+        scope.user = UserModel;
+      }
+    };
+  }
+
+}());

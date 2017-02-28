@@ -5,12 +5,14 @@
     .module('app.auth')
     .factory('UserModel', UserModel);
 
-  function UserModel() {
+  UserModel.$inject = ['BraveAuthConfig'];
+
+  function UserModel(braveAuthConfig) {
 
     return function (data) {
 
       if (typeof data.username !== 'undefined') {
-        this.username = data.username;
+        this.username = data[braveAuthConfig.getUsernameFieldName()];
       }
 
       if (typeof data.roles !== 'undefined') {

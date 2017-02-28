@@ -44,10 +44,14 @@
      */
     function login(username, password) {
 
+      var validationData = {};
+      validationData[braveAuthConfig.getUsernameFieldName()] = username;
+      validationData.password = password;
+
       return $http({
         method: 'POST',
         url: braveAuthConfig.getApiUrl() + braveAuthConfig.getResourceName(),
-        data: {username: username, password: password},
+        data: validationData,
         headers: {'Content-Type': 'application/json'}
       })
         .success(loginSuccessFn)

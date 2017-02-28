@@ -7,7 +7,7 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('braveAuthVersion', '0.0.13');
+    .value('braveAuthVersion', '0.0.19');
 
 })();
 
