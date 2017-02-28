@@ -94,7 +94,7 @@
       this.usernameFieldType = usernameFieldType;
     };
     this.setUsernameField = function (usernameField) {
-      console.log('angular-brave-auth: setUsernameField is deprecated, please use setUsernameFieldType to set type ' +
+      console.log('setUsernameField is deprecated, please use setUsernameFieldType to set type ' +
         'and setUusernameFieldName to set api field name');
       this.setUsernameFieldType(usernameField);
     };
@@ -253,6 +253,28 @@
 })();
 
 
+(function() {
+  'use strict';
+
+  angular.module('app.auth')
+    .directive('loginInfo', loginInfo);
+
+  loginInfo.$inject = ['BraveAuthConfig', 'UserModel'];
+
+  function loginInfo(authConfig, UserModel) {
+    return {
+      restrict: 'A',
+      templateUrl: function() {
+        return authConfig.getTemplates().directives.loginInfo;
+      },
+      link: function (scope, element) {
+        scope.user = UserModel;
+      }
+    };
+  }
+
+}());
+
 (function () {
   'use strict';
 
@@ -268,7 +290,7 @@
         'request': function (config) {
           var loggedUser = angular.fromJson($sessionStorage.loggedUser);
           config.headers = config.headers || {};
-          if (angular.isDefined(loggedUser.token) && loggedUser.token) {
+          if (angular.isObject(loggedUser)) {
             config.headers.Authorization = 'JWT ' + loggedUser.token;
           }
           return config;
@@ -597,25 +619,3 @@
   }
 
 })();
-
-(function() {
-  'use strict';
-
-  angular.module('app.auth')
-    .directive('loginInfo', loginInfo);
-
-  loginInfo.$inject = ['BraveAuthConfig', 'UserModel'];
-
-  function loginInfo(authConfig, UserModel) {
-    return {
-      restrict: 'A',
-      templateUrl: function() {
-        return authConfig.getTemplates().directives.loginInfo;
-      },
-      link: function (scope, element) {
-        scope.user = UserModel;
-      }
-    };
-  }
-
-}());
