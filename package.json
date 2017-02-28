@@ -2,7 +2,7 @@
   "name": "angular-brave-auth",
   "description": "Brave Auth module for angular apps",
   "main": "dist/angular-brave-auth.min.js",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "private": true,
   "license": "MIT",
   "author": {

@@ -7,7 +7,7 @@
    * @description Auth module of the application.
    */
   angular.module('app.auth', ['ui.router', 'ngCookies', 'ngStorage'])
-    .value('braveAuthVersion', '0.0.13');
+    .value('braveAuthVersion', '0.0.19');
 
 })();
 
@@ -294,12 +294,14 @@
     .module('app.auth')
     .factory('UserModel', UserModel);
 
-  function UserModel() {
+  UserModel.$inject = ['BraveAuthConfig'];
+
+  function UserModel(braveAuthConfig) {
 
     return function (data) {
 
       if (typeof data.username !== 'undefined') {
-        this.username = data.username;
+        this.username = data[braveAuthConfig.getUsernameField()];
       }
 
       if (typeof data.roles !== 'undefined') {
@@ -437,10 +439,14 @@
      */
     function login(username, password) {
 
+      var validationData = {};
+      validationData[braveAuthConfig.getUsernameField()] = username;
+      validationData.password = password;
+
       return $http({
         method: 'POST',
         url: braveAuthConfig.getApiUrl() + braveAuthConfig.getResourceName(),
-        data: {username: username, password: password},
+        data: validationData,
         headers: {'Content-Type': 'application/json'}
       })
         .success(loginSuccessFn)
