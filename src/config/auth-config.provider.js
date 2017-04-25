@@ -97,7 +97,7 @@
     this.setLogo = function (logo) {
       this.logo = logo;
     };
-    this.setNotificiations = function(notifications) {
+    this.setNotifications = function(notifications) {
       this.notifications = notifications;
     };
   }
