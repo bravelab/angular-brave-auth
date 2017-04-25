@@ -2,13 +2,13 @@
   "name": "angular-brave-auth",
   "description": "Brave Auth module for angular apps",
   "main": "dist/angular-brave-auth.min.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "license": "MIT",
   "author": {
     "name": "Mariusz Smenżyk",
-    "email": "mariusz.smenzyk@sizeof.pl",
-    "url": "https://www.sizeof.pl/en/"
+    "email": "mariusz.smenzyk@bravelab.io",
+    "url": "https://www.bravelab.io/"
   },
   "repository": {
     "type": "git",

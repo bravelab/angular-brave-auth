@@ -5,7 +5,8 @@
     .module('app.auth')
     .factory('AuthService', AuthService);
 
-  AuthService.$inject = ['$sessionStorage', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig', 'AuthToolsService', 'UserModel'];
+  AuthService.$inject = ['$sessionStorage', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig',
+    'AuthToolsService', 'UserModel', 'toastr'];
 
   /**
    *
@@ -18,10 +19,12 @@
    * @param {Object} braveAuthConfig - Config provider
    * @param {Object} authToolsService - Auth Service
    * @param {Object} UserModel - User model
+   * @param {Object} toastr - Notifications
    * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
    * @constructor
    */
-  function AuthService($sessionStorage, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
+  function AuthService($sessionStorage, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService,
+                       UserModel, toastr) {
 
     /**
      * @name AuthService
@@ -88,6 +91,9 @@
        */
       function loginErrorFn() {
         $state.go($state.current, {message: 'Invalid login or password'});
+        if (braveAuthConfig.getNotifications().enable) {
+          toastr.error(braveAuthConfig.getNotifications().loginErrorMessage);
+        }
       }
     }
 

@@ -22,6 +22,10 @@
       'alt': 'Angular Brave Auth',
       'title': 'Angular Brave Auth'
     };
+    this.notifications = {
+      enable: true,
+      loginErrorMessage:'Username or password is incorrect '
+    };
 
     this.templates = {
       views: {
@@ -40,6 +44,7 @@
       var usernameFieldType = this.usernameFieldType;
       var usernameFieldName = this.usernameFieldName;
       var logo = this.logo;
+      var notifications = this.notifications;
 
       return {
         getApiUrl: function () {
@@ -62,6 +67,9 @@
         },
         getLogo: function () {
           return logo;
+        },
+        getNotifications: function () {
+          return notifications;
         }
       };
     };
@@ -88,6 +96,9 @@
     };
     this.setLogo = function (logo) {
       this.logo = logo;
+    };
+    this.setNotificiations = function(notifications) {
+      this.notifications = notifications;
     };
   }
 

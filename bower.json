@@ -24,6 +24,7 @@
     "angular-bootstrap": "~1.1.0",
     "angular-ui-router": "~0.2.15",
     "angular-cookies": "^1.5.3",
+    "angular-toastr": "latest",
     "ngstorage": "^0.3.10",
     "underscore": "latest"
   }

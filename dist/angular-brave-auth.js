@@ -16,171 +16,6 @@
 (function () {
   'use strict';
 
-  /**
-   * @ngdoc overview
-   * @name brave [app.auth]
-   * @description Config provider for app.auth
-   */
-
-  angular
-    .module('app.auth')
-    .provider('BraveAuthConfig', BraveAuthConfig);
-
-  function BraveAuthConfig() {
-
-    this.apiUrl = '/api';
-    this.resourceName = '/auth/login/';
-    this.usernameFieldType = 'email'; // form template
-    this.usernameFieldName = 'username'; // api field name
-    this.logo = {
-      'src': '../../../styles/img/logo.png',
-      'alt': 'Angular Brave Auth',
-      'title': 'Angular Brave Auth'
-    };
-
-    this.templates = {
-      views: {
-        login: 'bower_components/angular-brave-auth/src/templates/login.tpl.html'
-      },
-      directives: {
-        loginInfo: 'bower_components/angular-brave-auth/src/templates/login-info.tpl.html'
-      }
-    };
-
-    this.$get = function () {
-
-      var apiUrl = this.apiUrl;
-      var templates = this.templates;
-      var resourceName = this.resourceName;
-      var usernameFieldType = this.usernameFieldType;
-      var usernameFieldName = this.usernameFieldName;
-      var logo = this.logo;
-
-      return {
-        getApiUrl: function () {
-          return apiUrl;
-        },
-        getResourceName: function () {
-          return resourceName;
-        },
-        getTemplates: function () {
-          return templates;
-        },
-        getUsernameFieldType: function () {
-          return usernameFieldType;
-        },
-        getUsernameFieldName: function () {
-          return usernameFieldName;
-        },
-        getUsernameFieldTemplate: function () {
-          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameFieldType + '.html';
-        },
-        getLogo: function () {
-          return logo;
-        }
-      };
-    };
-
-    this.setApiUrl = function (apiUrl) {
-      this.apiUrl = apiUrl;
-    };
-    this.setResourceName = function (resourceName) {
-      this.resourceName = resourceName;
-    };
-    this.setTemplates = function (templates) {
-      this.templates = templates;
-    };
-    this.setUsernameFieldType = function (usernameFieldType) {
-      this.usernameFieldType = usernameFieldType;
-    };
-    this.setUsernameField = function (usernameField) {
-      console.log('setUsernameField is deprecated, please use setUsernameFieldType to set type ' +
-        'and setUusernameFieldName to set api field name');
-      this.setUsernameFieldType(usernameField);
-    };
-    this.setUsernameFieldName = function (usernameFieldName) {
-      this.usernameFieldName = usernameFieldName;
-    };
-    this.setLogo = function (logo) {
-      this.logo = logo;
-    };
-  }
-
-})();
-
-(function () {
-  'use strict';
-
-
-  /**
-   * @ngdoc routes
-   * @name app [app.auth]
-   * @description Routes configuration app.auth
-   */
-  angular
-    .module('app.auth')
-    .config(routes);
-
-  routes.$inject = ['$stateProvider', 'BraveAuthConfigProvider'];
-
-  /**
-   *
-   * @param {Object} $stateProvider - state provider
-   * @param {Object} braveAuthConfig - Auth config
-     */
-  function routes($stateProvider, braveAuthConfig) {
-
-    $stateProvider
-      .state('login', {
-        url: '/login',
-        views: {
-          root: {
-            templateUrl: function() {
-              return braveAuthConfig.templates.views.login;
-            },
-            controller: 'LoginController',
-            controllerAs: 'vm'
-          }
-        },
-        data: {
-          title: 'Login',
-          htmlId: 'extr-page'
-        },
-        resolve: {
-          scripts: function (lazyScript) {
-            return lazyScript.register([
-              'build/vendor.ui.js'
-            ]);
-          }
-        }
-      })
-
-      .state('logout', {
-        url: '/logout',
-        views: {
-          root: {
-            controller: 'LogoutController'
-          }
-        },
-        data: {
-          title: 'Logout',
-          htmlId: 'extr-page'
-        },
-        resolve: {
-          scripts: function (lazyScript) {
-            return lazyScript.register([
-              'build/vendor.ui.js'
-            ]);
-          }
-        }
-      });
-  }
-
-})();
-
-(function () {
-  'use strict';
-
   angular
     .module('app.auth')
     .controller('LoginController', LoginController);
@@ -303,6 +138,182 @@
 (function () {
   'use strict';
 
+  /**
+   * @ngdoc overview
+   * @name brave [app.auth]
+   * @description Config provider for app.auth
+   */
+
+  angular
+    .module('app.auth')
+    .provider('BraveAuthConfig', BraveAuthConfig);
+
+  function BraveAuthConfig() {
+
+    this.apiUrl = '/api';
+    this.resourceName = '/auth/login/';
+    this.usernameFieldType = 'email'; // form template
+    this.usernameFieldName = 'username'; // api field name
+    this.logo = {
+      'src': '../../../styles/img/logo.png',
+      'alt': 'Angular Brave Auth',
+      'title': 'Angular Brave Auth'
+    };
+    this.notifications = {
+      enable: true,
+      loginErrorMessage:'Username or password is incorrect '
+    };
+
+    this.templates = {
+      views: {
+        login: 'bower_components/angular-brave-auth/src/templates/login.tpl.html'
+      },
+      directives: {
+        loginInfo: 'bower_components/angular-brave-auth/src/templates/login-info.tpl.html'
+      }
+    };
+
+    this.$get = function () {
+
+      var apiUrl = this.apiUrl;
+      var templates = this.templates;
+      var resourceName = this.resourceName;
+      var usernameFieldType = this.usernameFieldType;
+      var usernameFieldName = this.usernameFieldName;
+      var logo = this.logo;
+      var notifications = this.notifications;
+
+      return {
+        getApiUrl: function () {
+          return apiUrl;
+        },
+        getResourceName: function () {
+          return resourceName;
+        },
+        getTemplates: function () {
+          return templates;
+        },
+        getUsernameFieldType: function () {
+          return usernameFieldType;
+        },
+        getUsernameFieldName: function () {
+          return usernameFieldName;
+        },
+        getUsernameFieldTemplate: function () {
+          return 'bower_components/angular-brave-auth/src/templates/fields/username/' + usernameFieldType + '.html';
+        },
+        getLogo: function () {
+          return logo;
+        },
+        getNotifications: function () {
+          return notifications;
+        }
+      };
+    };
+
+    this.setApiUrl = function (apiUrl) {
+      this.apiUrl = apiUrl;
+    };
+    this.setResourceName = function (resourceName) {
+      this.resourceName = resourceName;
+    };
+    this.setTemplates = function (templates) {
+      this.templates = templates;
+    };
+    this.setUsernameFieldType = function (usernameFieldType) {
+      this.usernameFieldType = usernameFieldType;
+    };
+    this.setUsernameField = function (usernameField) {
+      console.log('setUsernameField is deprecated, please use setUsernameFieldType to set type ' +
+        'and setUusernameFieldName to set api field name');
+      this.setUsernameFieldType(usernameField);
+    };
+    this.setUsernameFieldName = function (usernameFieldName) {
+      this.usernameFieldName = usernameFieldName;
+    };
+    this.setLogo = function (logo) {
+      this.logo = logo;
+    };
+    this.setNotificiations = function(notifications) {
+      this.notifications = notifications;
+    };
+  }
+
+})();
+
+(function () {
+  'use strict';
+
+
+  /**
+   * @ngdoc routes
+   * @name app [app.auth]
+   * @description Routes configuration app.auth
+   */
+  angular
+    .module('app.auth')
+    .config(routes);
+
+  routes.$inject = ['$stateProvider', 'BraveAuthConfigProvider'];
+
+  /**
+   *
+   * @param {Object} $stateProvider - state provider
+   * @param {Object} braveAuthConfig - Auth config
+     */
+  function routes($stateProvider, braveAuthConfig) {
+
+    $stateProvider
+      .state('login', {
+        url: '/login',
+        views: {
+          root: {
+            templateUrl: function() {
+              return braveAuthConfig.templates.views.login;
+            },
+            controller: 'LoginController',
+            controllerAs: 'vm'
+          }
+        },
+        data: {
+          title: 'Login',
+          htmlId: 'extr-page'
+        },
+        resolve: {
+          scripts: function (lazyScript) {
+            return lazyScript.register([
+              'build/vendor.ui.js'
+            ]);
+          }
+        }
+      })
+
+      .state('logout', {
+        url: '/logout',
+        views: {
+          root: {
+            controller: 'LogoutController'
+          }
+        },
+        data: {
+          title: 'Logout',
+          htmlId: 'extr-page'
+        },
+        resolve: {
+          scripts: function (lazyScript) {
+            return lazyScript.register([
+              'build/vendor.ui.js'
+            ]);
+          }
+        }
+      });
+  }
+
+})();
+
+(function () {
+  'use strict';
+
   angular
     .module('app.auth')
     .factory('UserModel', UserModel);
@@ -413,7 +424,8 @@
     .module('app.auth')
     .factory('AuthService', AuthService);
 
-  AuthService.$inject = ['$sessionStorage', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig', 'AuthToolsService', 'UserModel'];
+  AuthService.$inject = ['$sessionStorage', '$state', '$rootScope', '$localStorage', '$q', '$http', 'BraveAuthConfig',
+    'AuthToolsService', 'UserModel', 'toastr'];
 
   /**
    *
@@ -426,10 +438,12 @@
    * @param {Object} braveAuthConfig - Config provider
    * @param {Object} authToolsService - Auth Service
    * @param {Object} UserModel - User model
+   * @param {Object} toastr - Notifications
    * @returns {{login: app.auth.services.AuthService.login, logout: app.auth.services.AuthService.logout}} Object
    * @constructor
    */
-  function AuthService($sessionStorage, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService, UserModel) {
+  function AuthService($sessionStorage, $state, $rootScope, $localStorage, $q, $http, braveAuthConfig, authToolsService,
+                       UserModel, toastr) {
 
     /**
      * @name AuthService
@@ -496,6 +510,9 @@
        */
       function loginErrorFn() {
         $state.go($state.current, {message: 'Invalid login or password'});
+        if (braveAuthConfig.getNotifications().enable) {
+          toastr.error(braveAuthConfig.getNotifications().loginErrorMessage);
+        }
       }
     }
 
